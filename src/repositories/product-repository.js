@@ -9,9 +9,5 @@ const db = mysql.createConnection ({
 })
 
 exports.get = async() => {
-    db.query("SELECT * FROM product", (error,result) => {
-        // hasil data dari mysql
-        console.log(result)
-        res.send(result)
-    })
+    return await db.query("SELECT * FROM product");
 }
