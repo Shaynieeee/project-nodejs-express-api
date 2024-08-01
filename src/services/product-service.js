@@ -2,6 +2,8 @@
 
 const repository = require('../repositories/product-repository');
 
-exports.getProducts = async () => {
-    return await repository.get();
+exports.getProducts = async (cb) => {
+    repository.get((err, result) => {
+        cb(result);
+    });
 }

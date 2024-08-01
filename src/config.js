@@ -7,5 +7,9 @@ module.exports = {
     MODE: 'development', // production or development
     CONNECTION_STRING: 'mongodb://luis:luis@ds058048.mlab.com:58048/nodestr', //mongodb connection string (required)
     SENDGRID_API_KEY: '', //sendgrid api key (optional)
-    SENDGRID_MAILER: '' // who is sending the emails (optional)
+    SENDGRID_MAILER: '', // who is sending the emails (optional)
+    MYSQL_HOST: 'localhost',
+    MYSQL_DB_NAME: 'catalog_db',
+    MYSQL_USERNAME: 'root',
+    MYSQL_PASSWORD: 'password'
 };
