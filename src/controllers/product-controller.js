@@ -12,9 +12,9 @@ exports.getProducts = async(req, res, next) => {
     }
 };
 
-exports.postProducts = async (req, res) => {
+exports.createProducts = async (req, res) => {
     try {
-      let data = await productService.postProducts(req.body);
+      let data = await productService.createProducts(req.body);
       res.status(201).json(data);
     } catch (error) {
       res.status(500).json({ error: 'Terjadi kesalahan dalam sistem' });

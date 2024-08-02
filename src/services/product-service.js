@@ -11,7 +11,7 @@ exports.getProducts = async () => {
     }
 };
 
-exports.postProducts = async (productData) => {
+exports.createProducts = async (productData, cb) => {
     try {
         // Validasi data sebelum mengirim ke repository
         if (!productData.name || !productData.price || !productData.exp) {
