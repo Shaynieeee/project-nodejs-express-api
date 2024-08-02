@@ -9,7 +9,7 @@ module.exports = {
     SENDGRID_API_KEY: '', //sendgrid api key (optional)
     SENDGRID_MAILER: '', // who is sending the emails (optional)
     MYSQL_HOST: 'localhost',
-    MYSQL_DB_NAME: 'catalog_db',
+    MYSQL_DB_NAME: 'js',
     MYSQL_USERNAME: 'root',
-    MYSQL_PASSWORD: 'password'
+    MYSQL_PASSWORD: ''
 };
