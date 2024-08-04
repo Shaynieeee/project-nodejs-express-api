@@ -33,3 +33,15 @@ exports.deleteProduct = async (id) => {
         throw new Error('Failed to delete product');
     }
 };
+
+exports.updateProduct = async (id, productData) => {
+    try {
+        if (!productData.name || !productData.price || !productData.exp) {
+            throw new Error('Invalid product data');
+        }
+        return await repository.update(id, productData);
+    } catch (error) {
+        console.error('Error in updateProduct:', error);
+        throw new Error('Failed to update product');
+    }
+};

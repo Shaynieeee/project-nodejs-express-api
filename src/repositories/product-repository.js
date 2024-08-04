@@ -56,3 +56,26 @@ exports.delete = async (id) => {
             });
     });
 };
+
+exports.update = async (id, productData) => {
+    const { name, price, exp } = productData;
+    const connection = utils.getDBConnection();
+
+    return new Promise((resolve, reject) => {
+        connection.query(
+            'UPDATE products SET name = ?, price = ?, exp = ? WHERE id = ?', 
+            [name, price, exp, id],
+            (err, results) => {
+                connection.end();
+                if (err) {
+                    return reject(err);
+                }
+                if (results.affectedRows > 0) {
+                    resolve({ message: 'Product updated successfully' });
+                } else {
+                    reject(new Error('Product not found'));
+                }
+            }
+        );
+    });
+};
