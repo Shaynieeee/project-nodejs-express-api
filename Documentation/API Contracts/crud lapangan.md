@@ -3,6 +3,7 @@
 > **POST** /products
 
 ## Request Header
+`Authorization: Bearer <token>`
 
 ## Request Body
 ```
@@ -69,7 +70,15 @@
       "address": "String",
       "open_hour": "datetime",
       "close_hour": "datetime"
-    }
+    },
+      "audit_trail": [
+        {
+          "changed_by": "String",
+          "changed_at": "datetime",
+          "created_at": "datetime",
+          "created_by": "String"
+          }
+        ]
   ]
 }
 ```
@@ -80,11 +89,61 @@
   "error": "Internal Server Error"
 }
 ```
+
+# Get Product list (with pagination)
+> **GET** /products
+
+**Query Parameters**:
+  - `page` (int, optional): The page number to retrieve. Defaults to `1`.
+  - `size` (int, optional): The number of products per page. Defaults to `20`.
+
+## Request Header
+`Authorization: Bearer <token>`
+
+## Request Body
+
+## Response Body (Success 200)
+```
+  {
+    "success": true,
+    "data": {
+      "products": [
+        {
+          "id": "long",
+          "name": "String",
+          "quantity": "int",
+          "price": "float",
+          "type": "String",
+          "photo": "String",
+          "created_at": "datetime",
+          "address": "String",
+          "open_hour": "datetime",
+          "close_hour": "datetime"
+        }
+      ],
+      "pagination": {
+        "current_page": "int",
+        "total_pages": "int",
+        "total_items": "int",
+        "page_size": "int"
+      }
+    }
+  }
+```
+## Response Body (Error 500)
+```
+{
+  "success": false,
+  "error": "Interval server error"
+}
+```
+
 # Get Product detail
-> **GET** /products{id}
+> **GET** /products/{id}
 
 ## Request Header
 `Content-Type: application/json`
+`Authorization: Bearer <token>`
 
 ## Request Body
 ```
@@ -104,7 +163,15 @@
     "address": "String",
     "open_hour": "datetime",
     "close_hour": "datetime"
-  }
+  },
+      "audit_trail": [
+        {
+          "changed_by": "String",
+          "changed_at": "datetime",
+          "created_at": "datetime",
+          "created_by": "String"
+        }
+      ]
 }
 ```
 
@@ -185,7 +252,7 @@
 }
 ```
 # Create Discount
-> **POST** /discounts
+> **POST** /products/discounts
 
 ## Request Header
 `Content-Type: application/json`
@@ -218,7 +285,7 @@
 }
 ```
 # Get Discount detail
-> **GET** /discounts/{id}
+> **GET** /products/discounts/{id}
 
 ## Request Header
 `Content-Type: application/json`
@@ -246,7 +313,7 @@
 }
 ```
 # Update Discount
-> **PATCH** /discounts/{id}
+> **PATCH** /products/discounts/{id}
 
 ## Request Header
 `Content-Type: application/json`
@@ -279,10 +346,210 @@
 }
 ```
 # Delete Discount
-> **PATCH** /discounts/{id}
+> **PATCH** /products/discounts/{id}
 
 ## Request Header
 `Authorization: Bearer <token>`
 
 ## Request Body
+```
+```
+
+## Response Body (Success 200)
+```
+{
+  "success": true
+}
+```
+
+## Response Body (Error 404)
+```
+{
+  "success": false,
+  "error": "Discount not found"
+}
+```
+# Create Order
+> **POST** /orders
+
+## Request Header
+`Content-Type: application/json`
+
+## Request Body
+```
+{
+  "user_id": "bigint",
+  "book_start_date": "datetime",
+  "book_end_date": "datetime",
+  "status": "String",
+  "total_amount": "float",
+  "payment_method": "String",
+  "order_items": [
+    {
+      "product_id": "bigint",
+      "price": "float",
+      "discount": "float",
+      "quantity": "int",
+      "total_amount": "float"
+    }
+  ]
+}
+```
+## Response Body (Success 201)
+```
+{
+  "success": true,
+  "data": {
+    "id": "bigint",
+    "user_id": "bigint",
+    "book_start_date": "datetime",
+    "book_end_date": "datetime",
+    "status": "String",
+    "total_amount": "float",
+    "payment_method": "String",
+    "order_items": [
+      {
+        "product_id": "bigint",
+        "price": "float",
+        "discount": "float",
+        "quantity": "int",
+        "total_amount": "float"
+      }
+    ]
+  },
+      "audit_trail": [
+        {
+          "changed_by": "String",
+          "changed_at": "datetime",
+          "created_at": "datetime",
+          "created_by": "String"
+          }
+        ]
+}
+```
+# Complete Order(Mark Status as "COMPLETED")
+> **PATCH** /orders/{id}/complete
+
+## Request Header
+`Authorization: Bearer <token>`
+
+## Request Body
+```
+{
+    "status": "COMPLETED"
+  }
+```
+## Response Body (Success 200)
+```
+{
+  "success": true,
+  "data": {
+    "id": "bigint",
+    "status": "COMPLETED"
+  }
+}
+```
+## Response Body (Error 404)
+```
+{
+  "success": false,
+  "error": "Order not found"
+}
+```
+# Cancel Order(Mark Status as "CANCELED")
+> **PATCH** /orders/{id}/cancel
+
+## Request Header
+`Authorization: Bearer <token>`
+
+## Request Body
+```
+{
+  "status": "CANCELED"
+}
+```
+
+## Response Body (Success 200)
+```
+{
+  "success": true,
+  "data": {
+    "id": "bigint",
+    "status": "CANCELED"
+  }
+}
+```
+## Response Body (Error 404)
+```
+{
+  "success": false,
+  "error": "Order not found"
+}
+```
+# Get Order List
+> **GET** /orders
+
+## Request Header
+`Authorization: Bearer <token>`
+
+## Request Body
+```
+```
+## Response Body (Success 200)
+```
+{
+  "success": true,
+  "data": [
+    {
+      "id": "bigint",
+      "user_id": "bigint",
+      "book_start_date": "datetime",
+      "book_end_date": "datetime",
+      "status": "String",
+      "total_amount": "float",
+      "payment_method": "String",
+      "created_at": "datetime",
+      "updated_at": "datetime"
+    }
+  ]
+}
+```
+## Response Body (Error 404)
+```
+{
+  "success": false,
+  "error": "Internal Server Error"
+}
+```
+# Get Order Status History
+> **GET** /orders/{id}/status-history
+
+## Request Header
+`Authorization: Bearer <token>`
+
+## Request Body
+```
+```
+
+## Response Body (Success 200)
+```
+{
+  "success": true,
+  "data": [
+    {
+      "id": "long",
+      "order_id": "long",
+      "status": "String",
+      "changed_at": "String (datetime)"
+    }
+  ]
+}
+```
+
+## Response Body (Error 404)
+```
+{
+  "success": false,
+  "error": "Order not found"
+}
 ```
