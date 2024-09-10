@@ -15,7 +15,11 @@
     "photo": "String",
     "address": "String",
     "open_hour": "datetime",
-    "close_hour": "datetime"
+    "close_hour": "datetime",
+    "discount": {
+       "type": "String",
+       "value": "float"
+   }
 }
 ```
 
@@ -23,18 +27,29 @@
 ```
 {
   "success": true,
-  "data": {
-    "id": "bigint",
-    "type": "String",
-    "name": "String",
-    "quantity": "int",
-    "price": "float",
-    "photo": "String",
-    "created_at" : "datetime",
-    "address": "String",
-    "open_hour": "datetime",
-    "close_hour": "datetime"
-  }
+  "data": [
+    {
+      "id": "bigint",
+      "type": "String",
+      "name": "String",
+      "quantity": "int",
+      "price": "float",
+      "photo": "String",
+      "address": "String",
+      "open_hour": "datetime",
+      "close_hour": "datetime",
+      "discount": {
+       "type": "String",
+       "value": "float"
+   },
+      "audit_trail": {
+          "changed_by": "String",
+          "changed_at": "datetime",
+          "created_at": "datetime",
+          "created_by": "String"
+          }
+      }
+  ]
 }
 ```
 
@@ -45,7 +60,7 @@
   "error": "Bad Request"
 }
 ```
-# Get Product List
+# Get Product List 
 > **GET** /products
 
 ## Request Header
@@ -69,16 +84,18 @@
       "photo": "String",
       "address": "String",
       "open_hour": "datetime",
-      "close_hour": "datetime"
+      "close_hour": "datetime",
+      "discount": {
+       "type": "String",
+       "value": "float"
+   }
     },
-      "audit_trail": [
-        {
+      "audit_trail": {
           "changed_by": "String",
           "changed_at": "datetime",
           "created_at": "datetime",
           "created_by": "String"
           }
-        ]
   ]
 }
 ```
@@ -118,7 +135,11 @@
           "created_at": "datetime",
           "address": "String",
           "open_hour": "datetime",
-          "close_hour": "datetime"
+          "close_hour": "datetime",
+          "discount": {
+       "type": "String",
+       "value": "float"
+   }
         }
       ],
       "pagination": {
@@ -162,16 +183,18 @@
     "photo": "String",
     "address": "String",
     "open_hour": "datetime",
-    "close_hour": "datetime"
+    "close_hour": "datetime",
+    "discount": {
+       "type": "String",
+       "value": "float"
+   }
   },
-      "audit_trail": [
-        {
+      "audit_trail": {
           "changed_by": "String",
           "changed_at": "datetime",
           "created_at": "datetime",
           "created_by": "String"
         }
-      ]
 }
 ```
 
@@ -200,7 +223,11 @@
   "photo": "String",
   "address": "String",
   "open_hour": "datetime",
-  "close_hour": "datetime"
+  "close_hour": "datetime",
+  "discount": {
+       "type": "String",
+       "value": "float"
+   }
 }
 ```
 ## Response Body (Success 200)
@@ -217,7 +244,11 @@
     "created_at": "datetime"
     "address": "String",
     "open_hour": "datetime",
-    "close_hour": "datetime"
+    "close_hour": "datetime",
+     "discount": {
+       "type": "String",
+       "value": "float"
+   }
   }
 }
 ```
@@ -251,124 +282,7 @@
   "error": "Product not found"
 }
 ```
-# Create Discount
-> **POST** /products/discounts
 
-## Request Header
-`Content-Type: application/json`
-
-## Request Body
-```
-{
-  "product_id": "bigint",
-  "type": "String",
-  "value": "float"
-}
-```
-## Response Body (Success 201)
-```
-{
-  "success": true,
-  "data": {
-    "id": "bigint",
-    "product_id": "bigint",
-    "type": "String",
-    "value": "float"
-  }
-}
-```
-## Response Body (Error 400)
-```
-{
-  "success": false,
-  "error": "Bad Request"
-}
-```
-# Get Discount detail
-> **GET** /products/discounts/{id}
-
-## Request Header
-`Content-Type: application/json`
-
-## Request Body
-```
-```
-## Response Body (Success 200)
-```
-{
-  "success": true,
-  "data": {
-    "id": "bigint",
-    "product_id": "bigint",
-    "type": "String",
-    "value": "float"
-  }
-}
-```
-## Response Body (Error 404)
-```
-{
-  "success": false,
-  "error": "Discount not found"
-}
-```
-# Update Discount
-> **PATCH** /products/discounts/{id}
-
-## Request Header
-`Content-Type: application/json`
-`Authorization: Bearer <token>`
-
-## Request Body
-```
-{
-  "type": "String",
-  "value": "float"
-}
-```
-## Response Body (Success 200)
-```
-{
-  "success": true,
-  "data": {
-    "id": "bigint",
-    "product_id": "bigint",
-    "type": "String",
-    "value": "float"
-  }
-}
-```
-## Response Body (Error 404)
-```
-{
-  "success": false,
-  "error": "Bad Request"
-}
-```
-# Delete Discount
-> **PATCH** /products/discounts/{id}
-
-## Request Header
-`Authorization: Bearer <token>`
-
-## Request Body
-```
-```
-
-## Response Body (Success 200)
-```
-{
-  "success": true
-}
-```
-
-## Response Body (Error 404)
-```
-{
-  "success": false,
-  "error": "Discount not found"
-}
-```
 # Create Order
 > **POST** /orders
 
@@ -415,16 +329,14 @@
         "quantity": "int",
         "total_amount": "float"
       }
-    ]
-  },
-      "audit_trail": [
-        {
+    ],
+      "audit_trail": {
           "changed_by": "String",
           "changed_at": "datetime",
           "created_at": "datetime",
           "created_by": "String"
           }
-        ]
+   }
 }
 ```
 # Complete Order(Mark Status as "COMPLETED")
@@ -435,9 +347,6 @@
 
 ## Request Body
 ```
-{
-    "status": "COMPLETED"
-  }
 ```
 ## Response Body (Success 200)
 ```
@@ -464,9 +373,6 @@
 
 ## Request Body
 ```
-{
-  "status": "CANCELED"
-}
 ```
 
 ## Response Body (Success 200)
@@ -509,9 +415,15 @@
       "total_amount": "float",
       "payment_method": "String",
       "created_at": "datetime",
-      "updated_at": "datetime"
+      "updated_at": "datetime"    
     }
-  ]
+  ],
+    "pagination": {
+        "current_page": "int",
+        "total_pages": "int",
+        "total_items": "int",
+        "page_size": "int"
+      }
 }
 ```
 ## Response Body (Error 404)
@@ -543,6 +455,64 @@
       "changed_at": "String (datetime)"
     }
   ]
+}
+```
+
+## Response Body (Error 404)
+```
+{
+  "success": false,
+  "error": "Order not found"
+}
+```
+# Get Order Detail (with Status History)
+> **GET** /orders/{id}
+
+## Request Header
+`Authorization: Bearer <token>`
+
+## Request Body
+```
+```
+
+## Response Body (Success 200)
+```
+{
+  "success": true,
+  "data": [
+{
+    "id": "bigint",
+    "user_id": "bigint",
+    "book_start_date": "datetime",
+    "book_end_date": "datetime",
+    "status": "String",
+    "total_amount": "float",
+    "payment_method": "String",
+    "order_items": [
+      {
+        "product_id": "bigint",
+        "price": "float",
+        "discount": "float",
+        "quantity": "int",
+        "total_amount": "float"
+      }
+    ],
+    "status_history": [
+      {
+        "id": "long",
+        "status": "String",
+        "changed_at": "datetime"
+      }
+    ],
+    "audit_trail": 
+      {
+        "changed_by": "String",
+        "changed_at": "datetime",
+        "created_at": "datetime",
+        "created_by": "String"
+      }
+   }
+ ]
 }
 ```
 
