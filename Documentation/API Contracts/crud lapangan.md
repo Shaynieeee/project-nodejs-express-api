@@ -41,7 +41,7 @@
       "discount": {
        "type": "String",
        "value": "float"
-   },
+      },
       "audit_trail": {
           "changed_by": "String",
           "changed_at": "datetime",
@@ -65,6 +65,7 @@
 
 ## Request Header
 `Content-Type: application/json`
+`Authorization: Bearer <token>`
 
 ## Request Body
 ```
@@ -73,30 +74,36 @@
 ## Response Body (Success 200)
 ```
 {
-  "success": true,
-  "data": [
-    {
-      "id": "bigint",
-      "type": "String",
-      "name": "String",
-      "quantity": "int",
-      "price": "float",
-      "photo": "String",
-      "address": "String",
-      "open_hour": "datetime",
-      "close_hour": "datetime",
-      "discount": {
-       "type": "String",
-       "value": "float"
-   }
-    },
-      "audit_trail": {
-          "changed_by": "String",
-          "changed_at": "datetime",
-          "created_at": "datetime",
-          "created_by": "String"
-          }
-  ]
+   "success":true,
+   "data":[
+      {
+         "id":"bigint",
+         "type":"String",
+         "name":"String",
+         "quantity":"int",
+         "price":"float",
+         "photo":"String",
+         "address":"String",
+         "open_hour":"datetime",
+         "close_hour":"datetime",
+         "discount":{
+            "type":"String",
+            "value":"float"
+         },
+         "audit_trail":{
+            "changed_by":"String",
+            "changed_at":"datetime",
+            "created_at":"datetime",
+            "created_by":"String"
+         },
+         "pagination": {
+         "current_page": "int",
+         "total_pages": "int",
+         "total_items": "int",
+         "page_size": "int"
+        }
+      }
+   ]
 }
 ```
 ## Response Body (Error 500)
@@ -104,58 +111,6 @@
 {
   "success": false,
   "error": "Internal Server Error"
-}
-```
-
-# Get Product list (with pagination)
-> **GET** /products
-
-**Query Parameters**:
-  - `page` (int, optional): The page number to retrieve. Defaults to `1`.
-  - `size` (int, optional): The number of products per page. Defaults to `20`.
-
-## Request Header
-`Authorization: Bearer <token>`
-
-## Request Body
-
-## Response Body (Success 200)
-```
-  {
-    "success": true,
-    "data": {
-      "products": [
-        {
-          "id": "long",
-          "name": "String",
-          "quantity": "int",
-          "price": "float",
-          "type": "String",
-          "photo": "String",
-          "created_at": "datetime",
-          "address": "String",
-          "open_hour": "datetime",
-          "close_hour": "datetime",
-          "discount": {
-       "type": "String",
-       "value": "float"
-   }
-        }
-      ],
-      "pagination": {
-        "current_page": "int",
-        "total_pages": "int",
-        "total_items": "int",
-        "page_size": "int"
-      }
-    }
-  }
-```
-## Response Body (Error 500)
-```
-{
-  "success": false,
-  "error": "Interval server error"
 }
 ```
 
@@ -173,28 +128,28 @@
 ## Response Body (Success 200)
 ```
 {
-  "success": true,
-  "data": {
-    "id": "bigint",
-    "type": "String",
-    "name": "String",
-    "quantity": "int",
-    "price": "float",
-    "photo": "String",
-    "address": "String",
-    "open_hour": "datetime",
-    "close_hour": "datetime",
-    "discount": {
-       "type": "String",
-       "value": "float"
+   "success":true,
+   "data":{
+      "id":"bigint",
+      "type":"String",
+      "name":"String",
+      "quantity":"int",
+      "price":"float",
+      "photo":"String",
+      "address":"String",
+      "open_hour":"datetime",
+      "close_hour":"datetime",
+      "discount":{
+         "type":"String",
+         "value":"float"
+      },
+      "audit_trail":{
+         "changed_by":"String",
+         "changed_at":"datetime",
+         "created_at":"datetime",
+         "created_by":"String"
+      }
    }
-  },
-      "audit_trail": {
-          "changed_by": "String",
-          "changed_at": "datetime",
-          "created_at": "datetime",
-          "created_by": "String"
-        }
 }
 ```
 
@@ -339,6 +294,13 @@
    }
 }
 ```
+## Response Body (Error 400)
+```
+{
+  "success": false,
+  "error": "Bad Request"
+}
+```
 # Complete Order(Mark Status as "COMPLETED")
 > **PATCH** /orders/{id}/complete
 
@@ -416,14 +378,14 @@
       "payment_method": "String",
       "created_at": "datetime",
       "updated_at": "datetime"    
-    }
-  ],
+    },
     "pagination": {
         "current_page": "int",
         "total_pages": "int",
         "total_items": "int",
         "page_size": "int"
       }
+  ]
 }
 ```
 ## Response Body (Error 404)
@@ -500,8 +462,7 @@
     "status_history": [
       {
         "id": "long",
-        "status": "String",
-        "changed_at": "datetime"
+        "status": "String"
       }
     ],
     "audit_trail": 
@@ -516,6 +477,132 @@
 }
 ```
 
+## Response Body (Error 404)
+```
+{
+  "success": false,
+  "error": "Order not found"
+}
+```
+# Create Membership Order
+> **POST** /memberships
+
+## Request Header
+`Authorization: Bearer <token>`
+
+## Request Body
+```
+{
+   "start_date": "datetime",
+    "end_date": "datetime",
+}
+```
+
+## Response Body (Success 201)
+```
+{
+  "success": true,
+  "data": [
+    {
+      "id": "bigint",
+      "membership_id":"bigint",
+      "start_date": "datetime",
+      "end_date": "datetime",
+      "audit_trail": {
+          "changed_by": "String",
+          "changed_at": "datetime",
+          "created_at": "datetime",
+          "created_by": "String"
+          }
+      }
+   ]
+}
+```
+## Response Body (Error 400)
+```
+{
+  "success": false,
+  "error": "Bad Request"
+}
+```
+# Get Membership Order Status History
+> **GET** /memberships/{id}/status-history
+
+## Request Header
+`Authorization: Bearer <token>`
+
+## Request Body
+```
+```
+
+## Response Body (Success 200)
+```
+{
+  "success": true,
+  "data": [
+    {
+      "id": "bigint",
+      "membership_id":"bigint",
+      "status": "String",
+      "changed_at": "String (datetime)"
+    }
+  ]
+}
+```
+
+## Response Body (Error 404)
+```
+{
+  "success": false,
+  "error": "Order not found"
+}
+``` 
+# Complete Membership Order(Mark Status as "COMPLETED")
+> **PATCH** /memberships/{id}/complete
+
+## Request Header
+`Authorization: Bearer <token>`
+
+## Request Body
+```
+```
+## Response Body (Success 200)
+```
+{
+  "success": true,
+  "data": {
+    "id": "bigint",
+    "status": "COMPLETED"
+  }
+}
+```
+## Response Body (Error 404)
+```
+{
+  "success": false,
+  "error": "Order not found"
+}
+```
+# Cancel Membership Order(Mark Status as "CANCELED")
+> **PATCH** /memberships/{id}/cancel
+
+## Request Header
+`Authorization: Bearer <token>`
+
+## Request Body
+```
+```
+
+## Response Body (Success 200)
+```
+{
+  "success": true,
+  "data": {
+    "id": "bigint",
+    "status": "CANCELED"
+  }
+}
+```
 ## Response Body (Error 404)
 ```
 {
