@@ -95,15 +95,14 @@
             "changed_at":"datetime",
             "created_at":"datetime",
             "created_by":"String"
-         },
-         "pagination": {
+         }
+      }
+   ], "pagination": {
          "current_page": "int",
          "total_pages": "int",
          "total_items": "int",
          "page_size": "int"
         }
-      }
-   ]
 }
 ```
 ## Response Body (Error 500)
@@ -378,14 +377,13 @@
       "payment_method": "String",
       "created_at": "datetime",
       "updated_at": "datetime"    
-    },
-    "pagination": {
+    }
+  ], "pagination": {
         "current_page": "int",
         "total_pages": "int",
         "total_items": "int",
         "page_size": "int"
       }
-  ]
 }
 ```
 ## Response Body (Error 404)
