@@ -1,28 +1,40 @@
-'use strict'
+'use strict';
+const mysql = require('mysql2');
+const utils = require('../lib/utils'); 
 
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
+exports.create = async (userData) => {
+    const { username, password, name, gender, address, role_id, created_by } = userData;
+    const connection = utils.getDBConnection(); 
 
-exports.get = async() => {
-    let res = await User.find({}, 'name email active roles created');
-    return res;
-}
-
-exports.getById = async(id) => {
-    let res = await User.findById(id, 'name email active roles created');
-    return res;
-}
-
-exports.create = async(data) => {
-    let user = new User(data);
-    await user.save();
-}
-
-exports.authenticate = async(data) => {
-    let res = await User.findOne({
-        email: data.email,
-        password: data.password,
-        active: true
+    return new Promise((resolve, reject) => {
+        connection.query(
+            'INSERT INTO User (username, password, name, gender, address, role_id, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+            [username, password, name, gender, address, role_id, new Date(), created_by],
+            (err, results) => {
+                if (err) {
+                    console.error('Error in create user:', err); 
+                    reject(err);
+                } else {
+                    resolve({ id: results.insertId });
+                }
+                connection.end(); 
+            }
+        );
     });
-    return res;
-}
+};
+
+exports.getAll = () => {
+    const connection = utils.getDBConnection();
+
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM User', (err, results) => {
+            if (err) {
+                console.error('Error in get user list:', err);
+                reject(err);
+            } else {
+                resolve(results);
+            }
+            connection.end();
+        });
+    });
+};
