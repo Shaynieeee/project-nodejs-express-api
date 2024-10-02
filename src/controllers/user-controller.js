@@ -8,7 +8,7 @@ exports.createUser = async (req, res) => {
         const result = await userService.createUser(userData);
         res.status(201).json({ message: 'User berhasil dibuat', userId: result.id });
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 };
 
