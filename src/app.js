@@ -16,10 +16,11 @@ const User = require('./models/user');
 //load routes
 const indexRoute = require('./routes/index-route');
 const userRoute = require('./routes/user-route');
+const authRoute = require('./routes/auth-route');
 const productRoute = require('./routes/product-route');
 
 app.use(bodyParser.json({ limit: '5mb' }));
-app.use(bodyParser.urlencoded({ extentend: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Enable CORS ()
 if(config.MODE == 'development') {
@@ -33,6 +34,7 @@ if(config.MODE == 'development') {
 
 app.use('/', indexRoute);
 app.use('/users', userRoute);
+app.use('/register', authRoute);
 app.use('/products', productRoute);
 
 module.exports = app;
