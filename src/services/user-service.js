@@ -52,12 +52,30 @@ exports.updateEmployee = async (id, updateData) => {
 // Update Customer
 exports.updateCustomer = async (id, updateData) => {
     try {
-        const user = await userRepository.update(id, updateData);
-        return user;
+        // Validasi: pastikan hanya field tertentu yang bisa di-update untuk customer
+        const allowedFields = ['password', 'name', 'gender', 'address'];
+        const filteredData = Object.keys(updateData)
+            .filter(key => allowedFields.includes(key))
+            .reduce((obj, key) => {
+                obj[key] = updateData[key];
+                return obj;
+            }, {});
+
+        if (Object.keys(filteredData).length === 0) {
+            throw new Error('Tidak ada data yang valid untuk di-update.');
+        }
+
+        const updatedUser = await userRepository.update(id, filteredData);
+        if (!updatedUser) {
+            throw new Error('Customer tidak ditemukan atau gagal diperbarui.');
+        }
+
+        return { success: true, updatedUser };
     } catch (err) {
         throw new Error('Gagal memperbarui customer: ' + err.message);
     }
 };
+
 
 exports.deleteUser = async (id) => {
     try {

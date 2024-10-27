@@ -11,8 +11,13 @@ exports.registerCustomer = async (userData) => {
             throw new Error('Username telah terdaftar');
         }
 
+        const customerData = {
+            ...userData,
+            role_id: 2 // role_id untuk customer
+        };
+
         // Membuat customer baru
-        const result = await authRepository.registerCustomer(userData);
+        const result = await authRepository.registerCustomer(customerData);
         return result;
     } catch (err) {
         throw new Error('Gagal mendaftarkan customer: ' + err.message);

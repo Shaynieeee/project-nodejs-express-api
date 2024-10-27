@@ -93,11 +93,18 @@ exports.updateUser= async (id, userData) => {
 
 // Update Customer
 exports.update = async (id, userData) => {
-    const query = 'UPDATE user SET password = ?, name = ?, gender = ?, address = ?';
+    const fields = Object.keys(userData);
+    const values = Object.values(userData);
+    
+    if (fields.length === 0) {
+        throw new Error('Tidak ada field yang diupdate');
+    }
+
+    const query = `UPDATE user SET ${fields.map(field => `${field} = ?`).join(', ')} WHERE id = ?`;
     const connection = utils.getDBConnection();
 
     return new Promise((resolve, reject) => {
-        connection.query(query, [userData.password, userData.name, userData.gender, userData.address,], (err, results) => {
+        connection.query(query, [...values, id], (err, results) => {
             if (err) {
                 reject(err);
             } else {

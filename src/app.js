@@ -20,7 +20,7 @@ const authRoute = require('./routes/auth-route');
 const productRoute = require('./routes/product-route');
 
 app.use(bodyParser.json({ limit: '5mb' }));
-app.use(bodyParser.urlencoded({ extentend: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Enable CORS ()
 if(config.MODE == 'development') {
