@@ -2,13 +2,35 @@
 
 const productService = require('../services/product-service');
 
-exports.getProducts = async(req, res, next) => {
+exports.getProducts = async (req, res) => {
     try {
-        let data = await productService.getProducts();
-        res.status(200).send(data);
-    } catch(e) {
-        console.log(e);
-        res.status(500).send({message: 'Terjadi kesalahan dalam sistem'});
+        // Mengambil filter dari query parameter URL
+        const filters = {
+            keyword: req.query.keyword, // Keyword untuk pencarian
+            category: req.query.category, // Kategori produk
+            date: req.query.date, // Tanggal yang dimaksud
+            hour: req.query.hour, // Jam yang dimaksud (jika ada)
+            page: parseInt(req.query.page) || 1, // Halaman, default ke 1 jika tidak ada
+            size: parseInt(req.query.size) || 10 // Jumlah data per halaman, default ke 10 jika tidak ada
+        };
+
+        // Memanggil service untuk mendapatkan data
+        const data = await productService.getProducts(filters);
+
+        // Mengirimkan response sukses
+        res.status(200).json({
+            success: true,
+            data, // Data produk
+            pagination: {
+                current_page: filters.page, // Halaman saat ini
+                total_items: data.length, // Total item di halaman ini
+                page_size: filters.size, // Jumlah data per halaman
+                total_pages: Math.ceil(data.length / filters.size) // Total halaman (logika dapat diperbaiki jika ada total count dari repository)
+            }
+        });
+    } catch (e) {
+        console.error(e); // Logging untuk debugging
+        res.status(500).json({ message: 'Terjadi kesalahan dalam sistem' }); // Mengirimkan response error
     }
 };
 

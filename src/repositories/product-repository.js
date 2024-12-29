@@ -2,18 +2,53 @@
 const mysql = require('mysql2');
 var utils = require('../lib/utils');
 
-exports.get = async () => {
-    var query = 'SELECT * FROM products';
-    var connection = utils.getDBConnection();
+exports.get = async (filters) => {
+    const { keyword, category, date, hour, page, size } = filters;
 
+    // Menghitung offset untuk pagination
+    const offset = (page - 1) * size;
+    const params = [];
+    let query = `SELECT * FROM products WHERE 1 = 1`; // Base query untuk mencari semua produk
+
+    // Filter berdasarkan keyword (pada field address atau name)
+    if (keyword) {
+        query += ` AND (address LIKE ? OR name LIKE ?)`;
+        params.push(`%${keyword}%`, `%${keyword}%`); // Menggunakan wildcard % untuk pencarian "contains"
+    }
+
+    // Filter berdasarkan category (field type)
+    if (category) {
+        query += ` AND type = ?`;
+        params.push(category); // Menambahkan nilai kategori ke parameter query
+    }
+
+    // Filter berdasarkan date (produk harus tersedia di hari itu)
+    if (date) {
+        query += ` AND DATE(open_hour) <= ? AND DATE(close_hour) >= ?`;
+        params.push(date, date); // Menambahkan tanggal sebagai parameter query
+    }
+
+    // Filter berdasarkan jam (produk harus tersedia di jam itu, hanya berlaku jika `date` diisi)
+    if (hour && date) {
+        query += ` AND TIME(open_hour) <= ? AND TIME(close_hour) >= ?`;
+        params.push(hour, hour); // Menambahkan jam sebagai parameter query
+    }
+
+    // Menambahkan pagination (LIMIT dan OFFSET)
+    query += ` LIMIT ? OFFSET ?`;
+    params.push(parseInt(size), parseInt(offset)); // Menambahkan batas data per halaman dan posisi awal data
+
+    const connection = utils.getDBConnection(); // Membuat koneksi ke database
+
+    // Menggunakan Promise untuk menangani query asynchronous
     return new Promise((resolve, reject) => {
-        connection.query(query, (err, results) => {
+        connection.query(query, params, (err, results) => {
             if (err) {
-                reject(err);
+                reject(err); // Menangkap error jika query gagal
             } else {
-                resolve(results);
+                resolve(results); // Mengembalikan hasil query jika sukses
             }
-            connection.end(); 
+            connection.end(); // Menutup koneksi setelah query selesai
         });
     });
 };

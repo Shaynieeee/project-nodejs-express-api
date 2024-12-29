@@ -2,12 +2,20 @@
 
 const repository = require('../repositories/product-repository');
 
-exports.getProducts = async () => {
+exports.getProducts = async (filters) => {
     try {
-        const result = await repository.get();
-        return result;
+        const { page, size } = filters;
+
+        // Validasi bahwa page dan size wajib diisi
+        if (!page || !size) {
+            throw new Error('Page and size parameters are mandatory'); // Jika tidak diisi, lempar error
+        }
+
+        // Memanggil repository untuk mendapatkan data produk
+        const result = await repository.get(filters);
+        return result; // Mengembalikan data ke controller
     } catch (error) {
-        throw error;
+        throw error; // Meneruskan error ke controller untuk ditangani
     }
 };
 
